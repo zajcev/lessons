@@ -1,9 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package less2;
+
+package Less2;
 
 import java.util.Scanner;
 
@@ -19,7 +15,7 @@ public class Less2 {
 
         for (int i = 10; i <= 30; i += 10) 
             PlayLevel(i);
-        System.out.println("WIN");
+        System.out.println("WIN Test Commit");
 
         scanner.close();
     }
