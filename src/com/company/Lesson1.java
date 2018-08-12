@@ -1,6 +1,6 @@
 package com.company;
 
-public class Lesson1<x> {
+public class Lesson1 {
 
     byte b = 5;
     short s = 123;
