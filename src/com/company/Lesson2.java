@@ -3,8 +3,7 @@ package com.company;
 public class Lesson2 {
 
 
-
-    public static  void main(String args[]) {
+    public static void main(String args[]) {
 
         int zeroAndOne[] = new int[]{1, 0, 1, 1, 0, 0, 1, 0, 1, 0};
         int plus[] = new int[8];
@@ -12,7 +11,7 @@ public class Lesson2 {
         int diagOne[][] = new int[4][4];
         int minAndMax[] = new int[]{347, 10, 5, 2, 10, 9, 3700, 12, 135};
         int balance[] = new int[]{3, 4, 3, 9};
-       // int[] shift = new int[]{1,1,1,1};
+        int[] shift = new int[]{1, 1, 1, 1};
 
 
         switchZeroAndOne(zeroAndOne);
@@ -21,7 +20,7 @@ public class Lesson2 {
         printDiag(diagOne);
         minMax(minAndMax);
         checkBalance(balance);
-      //  shiftArray(shift, 8);
+        shiftArray(shift, -3);
     }
 
     //1
@@ -122,13 +121,33 @@ public class Lesson2 {
         return check;
     }
 
+    //7
     public static void shiftArray(int[] arr, int n) {
+        try {
+            if (n > 0) {
+                for (int i = 0; i != n; i++) {
+                    arr[i] = 0;
+                }
+                for (int i : arr) {
+                    System.out.print(i);
+                }
+            }
 
-        // Я пытался(((
-
-    }
+            if (n < 0) {
+                for (int i = (arr.length - 1), j = 0; j != n; i--, j--) {
+                    arr[i] = 0;
+                }
+                for (int i : arr) {
+                    System.out.print(i);
+                }
+            }
+            if (n == 0) {
+                for (int i : arr) {
+                    System.out.print(i);
+                }
+            }
+        } catch (ArrayIndexOutOfBoundsException m){
+            System.out.println("n не может быть больше " + (arr.length) + " или меньше " + (-arr.length));
+        }
+     }
 }
-
-
-
-
