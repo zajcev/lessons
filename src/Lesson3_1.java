@@ -12,7 +12,7 @@ public class Lesson3_1 {
         /**
          * @param z - заданное число
          * @param num - введённое пользователем
-         * @param exit -
+         * @param exit - переменная для инициализации ответа
          */
         Scanner scanner = new Scanner(System.in);
         Random r = new Random();
