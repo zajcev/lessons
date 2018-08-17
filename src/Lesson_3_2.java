@@ -11,8 +11,10 @@ public class Lesson_3_2 {
     public static void main(String args[]){
         /**
          * @param z - Рандомное слово из массива
+         * @param w - Рандомный индекс для выбора слова из массива 
          * @param wish - Слово введённое пользователем
          * @param words[] - Массив со словами
+         
          */
         String z;
         String wish;
