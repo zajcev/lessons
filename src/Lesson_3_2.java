@@ -14,7 +14,6 @@ public class Lesson_3_2 {
          * @param w - Рандомный индекс для выбора слова из массива 
          * @param wish - Слово введённое пользователем
          * @param words[] - Массив со словами
-         
          */
         String z;
         String wish;
