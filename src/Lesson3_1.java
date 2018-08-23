@@ -16,7 +16,7 @@ public class Lesson3_1 {
          */
         Scanner scanner = new Scanner(System.in);
         Random r = new Random();
-        int z = r.nextInt(9);
+        int z = r.nextInt(10);
         int exit = 0;
 
         do {
