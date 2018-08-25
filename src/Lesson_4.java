@@ -179,7 +179,7 @@ public static boolean checkWin(char symb){
             if(count == DOTS_TO_WIN){
                 return true;
             }
-            if(map[i][j] == DOT){
+            if(map[j][i] == DOT){
                 count = 0;
             }
         }
