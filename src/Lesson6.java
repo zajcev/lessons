@@ -1,3 +1,5 @@
+import java.util.Random;
+
 /**
  * Решение дз 5-го урока
  * @author Михаил Зайцев
@@ -7,12 +9,14 @@
 public class Lesson6 {
 
     public static void main(String args[]) {
-        Animal[] animals = { new Cat(100, 100, 2), new Dog(100,100,0.5) };
+        int i = 0;
+        Animal[] animals = { new Cat(500, 100, 2),
+                             new Dog(400,10,0.5),
+                             new Dog(600, 10,1)};
 
         for(Animal animal : animals){
-            int i = 1;
-            System.out.println( "Animal number " + i +  " - Run: " + animal.running() + " Swim: " + animal.swimming() + " Jump: " + animal.jumping());
             i++;
+            System.out.println( "Animal number " + i +  " - Run: " + animal.running() + " Swim: " + animal.swimming() + " Jump: " + animal.jumping());
         }
     }
 }
@@ -49,9 +53,8 @@ interface IAnimal{
         this.lengthSwim = lengthSwim;
         this.height = height;
 }
-
         /**
-         * Переопределённый методы из интерфейса IAnimal
+         * Переопределённые методы из интерфейса IAnimal
          */
         @Override
         public boolean running() {
@@ -67,34 +70,46 @@ interface IAnimal{
         public boolean jumping() {
             return false;
         }
-
-
     }
 
     class Dog extends Animal {
         /**
-         *  Конструктор для создания обьекта собака
+         * @param runDog[] - массив для хранения длины бега
+         * @param jumpDog[] - массив для хранения высоты прыжка
+         * @param swimDog[] - массив для хранения длины плавания
+         * @param z - рандомное число для выбора элемента массива длины плавания
+         * @param j - рандомное число для выбора элемента массива высоты прыжка
+         * @param s - рандомное число для выбора элемента массива длины плавания
          */
+        int runDog[] = {400, 450, 500, 600};
+        double jumpDog[] = {0.5, 1, 1.5, 2};
+        int swimDog[] = {10, 15, 12, 5};
+        Random r = new Random();
+        int z = r.nextInt(4);
+        int j = r.nextInt(4);
+        int s = r.nextInt(4);
+
+
         Dog(int lengthRun, int lengthSwim, double height) {
             super(lengthRun, lengthSwim, height);
         }
 
      public boolean running() {
-            if(lengthRun > 500) {
+            if(lengthRun > runDog[z]) {
                 return false;
             }
             return true;
         }
 
         public boolean jumping() {
-            if(height > 0.5) {
+            if(height > jumpDog[j]) {
                 return false;
             }
             return true;
         }
 
         public boolean swimming() {
-            if (lengthSwim > 10){
+            if (lengthSwim > swimDog[s]){
                 return false;
             }
             return true;
@@ -104,21 +119,31 @@ interface IAnimal{
 
     class Cat extends Animal {
         /**
-         *  Конструктор для создания обьекта кот
+         * @param runCat[] - массив для хранения длины бега
+         * @param jumpCat[] - массив для хранения высоты прыжка
+         * @param z - рандомное число для выбора элемента массива длины
+         * @param j - рандомное число для выбора элемента массива высоты
          */
+        int runCat[] = {400, 450, 500, 600};
+        double jumpCat[] = {0.5, 1, 1.5, 2};
+        Random r = new Random();
+        int z = r.nextInt(4);
+        int j = r.nextInt(4);
+
+
         Cat(int lengthRun, int lengthSwim, double height) {
             super(lengthRun, lengthSwim, height);
         }
 
         public boolean running() {
-            if(lengthRun > 200) {
+            if(lengthRun > runCat[z]) {
                 return false;
             }
             return true;
         }
 
         public boolean jumping() {
-            if(height > 2) {
+            if(height > jumpCat[j]) {
                 return false;
             }
             return true;
