@@ -9,14 +9,13 @@ import java.util.Random;
 public class Lesson6 {
 
     public static void main(String args[]) {
-        int i = 0;
-        Animal[] animals = { new Cat(500, 100, 2),
-                             new Dog(400,10,0.5),
-                             new Dog(600, 10,1)};
+        Animal[] animals = { new Cat("Кот Мурзик",500, 100, 2),
+                             new Dog("Пёс Шарик",400,10,0.5),
+                             new Dog("Пёс Барон",600, 10,1)};
 
         for(Animal animal : animals){
-            i++;
-            System.out.println( "Animal number " + i +  " - Run: " + animal.running() + " Swim: " + animal.swimming() + " Jump: " + animal.jumping());
+            System.out.println( animal.name + " - Run: " + animal.running(animal.lengthRun) + " Swim: " + animal.swimming(animal.lengthSwim)
+                    + " Jump: " + animal.jumping(animal.height));
         }
     }
 }
@@ -26,11 +25,11 @@ public class Lesson6 {
  */
 interface IAnimal{
 
-    abstract boolean running();
+    abstract boolean running(int run);
 
-    abstract boolean swimming();
+    abstract boolean swimming(int swim);
 
-    abstract boolean jumping();
+    abstract boolean jumping(double jump);
 
 }
 
@@ -45,10 +44,12 @@ interface IAnimal{
     int lengthRun;
     int lengthSwim;
     double height;
+    String name;
 /**
  *  Конструктор для создания обьекта животного
  */
-    Animal(int lengthRun, int lengthSwim, double height){
+    Animal(String name, int lengthRun, int lengthSwim, double height){
+        this.name = name;
         this.lengthRun = lengthRun;
         this.lengthSwim = lengthSwim;
         this.height = height;
@@ -57,17 +58,17 @@ interface IAnimal{
          * Переопределённые методы из интерфейса IAnimal
          */
         @Override
-        public boolean running() {
+        public boolean running(int run) {
             return false;
         }
 
         @Override
-        public boolean swimming() {
+        public boolean swimming(int swim) {
             return false;
         }
 
         @Override
-        public boolean jumping() {
+        public boolean jumping(double jump) {
             return false;
         }
     }
@@ -81,6 +82,7 @@ interface IAnimal{
          * @param j - рандомное число для выбора элемента массива высоты прыжка
          * @param s - рандомное число для выбора элемента массива длины плавания
          */
+        String name;
         int runDog[] = {400, 450, 500, 600};
         double jumpDog[] = {0.5, 1, 1.5, 2};
         int swimDog[] = {10, 15, 12, 5};
@@ -90,26 +92,26 @@ interface IAnimal{
         int s = r.nextInt(4);
 
 
-        Dog(int lengthRun, int lengthSwim, double height) {
-            super(lengthRun, lengthSwim, height);
+        Dog(String name,int lengthRun, int lengthSwim, double height) {
+            super(name, lengthRun, lengthSwim, height);
         }
 
-     public boolean running() {
-            if(lengthRun > runDog[z]) {
+     public boolean running(int run) {
+            if(run > runDog[z]) {
                 return false;
             }
             return true;
         }
 
-        public boolean jumping() {
-            if(height > jumpDog[j]) {
+        public boolean jumping(double jump) {
+            if(jump > jumpDog[j]) {
                 return false;
             }
             return true;
         }
 
-        public boolean swimming() {
-            if (lengthSwim > swimDog[s]){
+        public boolean swimming(int swim) {
+            if (swim > swimDog[s]){
                 return false;
             }
             return true;
@@ -124,6 +126,7 @@ interface IAnimal{
          * @param z - рандомное число для выбора элемента массива длины
          * @param j - рандомное число для выбора элемента массива высоты
          */
+        String name;
         int runCat[] = {400, 450, 500, 600};
         double jumpCat[] = {0.5, 1, 1.5, 2};
         Random r = new Random();
@@ -131,26 +134,23 @@ interface IAnimal{
         int j = r.nextInt(4);
 
 
-        Cat(int lengthRun, int lengthSwim, double height) {
-            super(lengthRun, lengthSwim, height);
+        Cat(String name, int lengthRun, int lengthSwim, double height) {
+            super(name,lengthRun, lengthSwim, height);
         }
 
-        public boolean running() {
-            if(lengthRun > runCat[z]) {
+        public boolean running(int run) {
+            if(run > runCat[z]) {
                 return false;
             }
             return true;
         }
 
-        public boolean jumping() {
-            if(height > jumpCat[j]) {
+        public boolean jumping(double jump) {
+            if(jump > jumpCat[j]) {
                 return false;
             }
             return true;
         }
 
-        public boolean swimming() {
-            return false;
-        }
     }
 
