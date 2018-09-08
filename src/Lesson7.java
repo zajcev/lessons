@@ -6,23 +6,28 @@
 public class Lesson7 {
     public static void main(String[] args){
     Cats[] cat = {  new Cats("Murzik", 10, false),
-                    new Cats("Pushok", 50, false),
+                    new Cats("Pushok", 50, true),
                     new Cats("James", 30, false) };
     Plate plate = new Plate(60);
         for (Cats cats : cat) {
             plate.info();
-            cats.eat(plate);
-            if (!cats.getSatiety()){
-                System.out.println(cats.getName() + " не наелся, добавим еды в миску");
-                plate.setFood(cats.getAppetite() - plate.getFood());
-                plate.info();
+            if (cats.getSatiety()) {
+                System.out.println(cats.getName() + " Сытый");
+            } else {
                 cats.eat(plate);
+                if (!cats.getSatiety()) {
+                    System.out.println(cats.getName() + " не наелся, добавим еды в миску");
+                    plate.setFood(cats.getAppetite() - plate.getFood());
+                    plate.info();
+                    cats.eat(plate);
+                }
+                System.out.println(cats.getName() + " Наелся - " + cats.getSatiety());
             }
-            System.out.println(cats.getName() + " Наелся - " + cats.getSatiety());
         }
-
     }
-}
+
+ }
+
 
 class Plate {
 
@@ -77,10 +82,12 @@ class Cats {
         this.satiety = satiety;
     }
     public void eat(Plate p) {
-        if (p.decreaseFood(appetite)) {
-            satiety = true;
-        } else {
-            satiety = false;
+        if(!satiety) {
+            if (p.decreaseFood(appetite)) {
+                satiety = true;
+            } else {
+                satiety = false;
+            }
         }
     }
 
