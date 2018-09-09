@@ -9,9 +9,16 @@ import java.util.Random;
 public class Lesson_2_Data {
 
     public static void main(String args[]) {
-        Arr arr = new Arr(100000);
+        Arr arr = new Arr(10);
         long startTime = System.currentTimeMillis();
+        arr.setNumsArray();
+        System.out.println("Наполним массив");
+        arr.display();
+        System.out.println();
+        System.out.println();
+        System.out.println("Отсортируем");
         arr.sortInsert();
+        arr.display();
         long endTime = System.currentTimeMillis() - startTime;
         System.out.println(endTime + " ms");
 
