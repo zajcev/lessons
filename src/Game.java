@@ -32,6 +32,7 @@ public class Game extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setBounds(500, 500, 300, 300);
         setResizable(false);
+        setTitle("Пятнашки");
 
 
         Container container = getContentPane();
