@@ -1,6 +1,5 @@
 package Java_Lvl_2.Lesson_6;
 
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
