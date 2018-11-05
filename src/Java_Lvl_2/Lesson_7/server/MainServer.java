@@ -4,18 +4,36 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.Vector;
 
 public class MainServer {
 
     Vector<ClientHandler> clients;
 
+    String currentTime;
+    boolean toDeactivate = false;
+
+
     public MainServer() throws SQLException {
 
         ServerSocket server = null;
         Socket socket = null;
         clients = new Vector<>();
-
+     new Thread(new Runnable() {
+         @Override
+         public void run() {
+             while (true) {
+                 Date date = new Date(System.currentTimeMillis());
+                 DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+                 currentTime = dateFormat.format(date) + " ";
+             }
+         }
+     }).start();
         try {
             AuthService.connect();
 
@@ -25,7 +43,7 @@ public class MainServer {
             while (true) {
                 socket = server.accept();
                 System.out.println("Клиент подключился!");
-               new ClientHandler(this, socket);
+                new ClientHandler(this, socket);
             }
 
         } catch (IOException e) {
@@ -47,9 +65,10 @@ public class MainServer {
 
     }
 
-    public void broadCastMsg(String msg) {
-        for (ClientHandler o: clients) {
-                o.sendMsg(msg);
+    public void broadCastMsg(String sender,String msg) {
+        for (ClientHandler client: clients) {
+            if (!AuthService.checkBlock(client.getNick(),sender))
+            client.sendMsg(currentTime+" "+msg);
             }
         }
 
@@ -71,18 +90,46 @@ public boolean userOnline(String nick){
     public void sendToNick(String sender,String recipient, String msg){
     for (ClientHandler client : clients ) {
         if (client.getNick().equals(sender)) // Показать сообщение отправителю
-            client.sendMsg(msg);
+            if (!AuthService.checkBlock(recipient,sender))
+                client.sendMsg(currentTime+" "+msg);
+            else
+                client.sendMsg("Пользователь "+recipient+" вас заблокировал");
         if (client.getNick().equals(recipient)) // Показать получателю
-            client.sendMsg(msg);
+            if (!AuthService.checkBlock(recipient,sender))
+            client.sendMsg(currentTime+" "+msg);
     }
 }
 
     public void subscribe(ClientHandler client) {
         clients.add(client);
+        broadcastClientsList();
     }
 
     public void unsubscribe(ClientHandler client) {
         clients.remove(client);
+        broadcastClientsList();
+    }
+
+    public void broadcastClientsList() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("/clientlist ");
+        for (ClientHandler o: clients) {
+            sb.append(o.getNick() + " ");
+        }
+        String out = sb.toString();
+        for (ClientHandler o: clients) {
+            o.sendMsg(out);
+        }
+    }
+    public boolean deactivate(){
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+            toDeactivate = true;
+            }
+        },120*1000);
+    return toDeactivate;
     }
 
 }

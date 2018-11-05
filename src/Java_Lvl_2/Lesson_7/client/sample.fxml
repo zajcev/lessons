@@ -9,6 +9,7 @@
 
 
 <?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ListView?>
 <VBox alignment="center" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.121" fx:controller="Java_Lvl_2.Lesson_7.client.Controller">
 
     <!--верхняя панель отвечает за авторизацию-->
@@ -18,11 +19,16 @@
         <Button onAction="#tryToAuth" text="Войти"/>
     </HBox>
 
-    <TextArea fx:id="textArea" editable="false" VBox.vgrow="ALWAYS" />
-
     <!--нижняя панель отвечает за чат-->
-    <HBox fx:id="bottomPanel" managed="false" visible="false">
-        <TextField fx:id="textField" onAction="#sendMsg" promptText="Введите текст" HBox.hgrow="ALWAYS" />
-        <Button fx:id="btn1" onAction="#sendMsg" text="Send" />
+    <HBox VBox.vgrow="ALWAYS">
+        <VBox HBox.hgrow="ALWAYS">
+            <TextArea fx:id="textArea" editable="false" VBox.vgrow="ALWAYS" />
+            <HBox fx:id="bottomPanel" managed="false" visible="false">
+                <TextField fx:id="textField" onAction="#sendMsg" promptText="Введите текст" HBox.hgrow="ALWAYS" />
+                <Button fx:id="btn1" onAction="#sendMsg" text="Send" />
+            </HBox>
+        </VBox>
+        <ListView fx:id="clientsList" managed="false" visible="false">
+        </ListView>
     </HBox>
 </VBox>

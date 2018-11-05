@@ -15,6 +15,30 @@ public class AuthService {
             e.printStackTrace();
         }
     }
+    public static void addUsers(String login, String pass, String nick) throws SQLException {
+        String sql = String.format("INSERT INTO USERS (login, password, nickname)" +
+                "VALUES ('%s','%s','%s')", login, pass.hashCode(), nick);
+        stmt.execute(sql);
+    }
+
+    public static void addBlock(String sender,String blockNick) throws SQLException {
+        String sql = String.format("INSERT INTO BLACKLIST (nickname, blocklist)" +
+                "VALUES('%s','%s')",sender,blockNick);
+        stmt.execute(sql);
+    }
+    public static boolean checkBlock(String recipient,String blockNick){
+        String sql = String.format("SELECT blacklist FROM BLACKLIST" +
+                " WHERE BLACKLIST.nickname = '%s' AND BLACKLIST.blacklist = '%s'",recipient,blockNick);
+        try {
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next()) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     public static String getNickByLoginAndPass(String login, String pass) {
         String sql = String.format("SELECT nickname FROM USERS" +

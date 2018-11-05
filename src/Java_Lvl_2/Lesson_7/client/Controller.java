@@ -1,21 +1,16 @@
 package Java_Lvl_2.Lesson_7.client;
 
+import Java_Lvl_2.Lesson_7.server.MainServer;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.net.URL;
-import java.util.ResourceBundle;
-
 
 public class Controller {
     @FXML
@@ -39,10 +34,15 @@ public class Controller {
     @FXML
     PasswordField passwordField;
 
+
+    @FXML
+    ListView<String> clientsList;
+
     Socket socket;
 
     DataInputStream in;
     DataOutputStream out;
+
 
     private boolean isAuthorized;
 
@@ -57,11 +57,15 @@ public class Controller {
             upperPanel.setManaged(true);
             bottomPanel.setVisible(false);
             bottomPanel.setManaged(false);
+            clientsList.setVisible(false);
+            clientsList.setManaged(false);
         } else {
             upperPanel.setVisible(false);
             upperPanel.setManaged(false);
             bottomPanel.setVisible(true);
             bottomPanel.setManaged(true);
+            clientsList.setVisible(true);
+            clientsList.setManaged(true);
         }
     }
 
@@ -89,8 +93,27 @@ public class Controller {
                         // цикл для работы
                         while (true) {
                             String str = in.readUTF();
-                            if (str.equals("/serverClosed")) break;
-                            textArea.appendText(str + "\n");
+                            if(str.startsWith("/")){
+                                if (str.equals("/serverClosed")) {
+                                    setAthorized(false);
+                                    break;
+                                }
+                                if(str.startsWith("/clientlist")) {
+                                    String[] tokens = str.split(" ");
+                                    clientsList.getItems().clear();
+                                    Platform.runLater(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            clientsList.getItems().clear();
+                                            for (int i = 1; i < tokens.length; i++) {
+                                                clientsList.getItems().add(tokens[i]);
+                                            }
+                                        }
+                                    });
+                                }
+                            } else {
+                                textArea.appendText(str + "\n");
+                            }
                         }
 
                     } catch (IOException e) {
