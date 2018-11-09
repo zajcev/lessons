@@ -20,9 +20,17 @@ public class AuthService {
                 "VALUES ('%s','%s','%s')", login, pass.hashCode(), nick);
         stmt.execute(sql);
     }
+    public static void renameUser(String oldNick, String newNick) throws SQLException {
+        String sql = String.format("UPDATE USERS SET nickname = '%s' WHERE nickname = '%s'",newNick,oldNick);
+        String nickname = String.format("UPDATE BLACKLIST SET nickname = '%s' WHERE nickname = '%s'",newNick,oldNick);
+        String blacklist = String.format("UPDATE BLACKLIST SET blacklist = '%s' WHERE blacklist = '%s'",newNick,oldNick);
+        stmt.execute(sql);
+        stmt.execute(nickname);
+        stmt.execute(blacklist);
+    }
 
     public static void addBlock(String sender,String blockNick) throws SQLException {
-        String sql = String.format("INSERT INTO BLACKLIST (nickname, blocklist)" +
+        String sql = String.format("INSERT INTO BLACKLIST (nickname, blacklist)" +
                 "VALUES('%s','%s')",sender,blockNick);
         stmt.execute(sql);
     }
@@ -42,7 +50,7 @@ public class AuthService {
 
     public static String getNickByLoginAndPass(String login, String pass) {
         String sql = String.format("SELECT nickname FROM USERS" +
-                " WHERE login = '%s' AND password = '%s'", login, pass);
+                " WHERE login = '%s' AND password = '%s'", login, pass.hashCode());
         try {
             ResultSet rs = stmt.executeQuery(sql);
 
@@ -54,6 +62,22 @@ public class AuthService {
             e.printStackTrace();
         }
         return null;
+    }
+    public static boolean nickIsBusy(String nick)  {
+        String sql = String.format("SELECT nickname FROM USERS" +
+                " WHERE USERS.nickname = '%s'",nick);
+        ResultSet rs = null;
+        try {
+            rs = stmt.executeQuery(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            if (rs.next()) return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 

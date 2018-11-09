@@ -3,9 +3,11 @@ package Java_Lvl_2.Lesson_7.client;
 import Java_Lvl_2.Lesson_7.server.MainServer;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -34,9 +36,26 @@ public class Controller {
     @FXML
     PasswordField passwordField;
 
+    @FXML
+    Hyperlink registration;
 
     @FXML
     ListView<String> clientsList;
+
+    @FXML
+    HBox regPane;
+
+    @FXML
+    TextField regLog;
+
+    @FXML
+    PasswordField regPass;
+
+    @FXML
+    TextField regNick;
+
+    @FXML
+    Hyperlink back;
 
     Socket socket;
 
@@ -45,6 +64,7 @@ public class Controller {
 
 
     private boolean isAuthorized;
+
 
     final String IP_ADRESS = "localhost";
     final int PORT = 8189;
@@ -59,6 +79,13 @@ public class Controller {
             bottomPanel.setManaged(false);
             clientsList.setVisible(false);
             clientsList.setManaged(false);
+            registration.setVisible(true);
+            registration.setManaged(true);
+            regPane.setVisible(false);
+            regPane.setManaged(false);
+            back.setVisible(false);
+            back.setManaged(false);
+
         } else {
             upperPanel.setVisible(false);
             upperPanel.setManaged(false);
@@ -66,8 +93,24 @@ public class Controller {
             bottomPanel.setManaged(true);
             clientsList.setVisible(true);
             clientsList.setManaged(true);
+            registration.setVisible(false);
+            registration.setManaged(false);
+
         }
     }
+   public void viewRegPane(){
+          regPane.setVisible(true);
+          regPane.setManaged(true);
+          upperPanel.setVisible(false);
+          upperPanel.setManaged(false);
+          registration.setVisible(false);
+          registration.setManaged(false);
+          back.setVisible(true);
+          back.setManaged(true);
+    }
+
+public void backToAuth(){ setAthorized(false);}
+
 
 
     public void connect() {
@@ -85,10 +128,17 @@ public class Controller {
                             String str = in.readUTF();
                             if(str.startsWith("/authok")) {
                                 setAthorized(true);
+                                textArea.clear();
                                 break;
                             } else {
                                 textArea.appendText(str + "\n");
                             }
+                            if (str.startsWith("Вы зарегистрированы")){
+                                backToAuth();
+                                textArea.clear();
+                                textArea.appendText(str+"\n");
+                            }
+
                         }
                         // цикл для работы
                         while (true) {
@@ -100,7 +150,6 @@ public class Controller {
                                 }
                                 if(str.startsWith("/clientlist")) {
                                     String[] tokens = str.split(" ");
-                                    clientsList.getItems().clear();
                                     Platform.runLater(new Runnable() {
                                         @Override
                                         public void run() {
@@ -151,6 +200,20 @@ public class Controller {
             out.writeUTF("/auth " + loginField.getText() + " " + passwordField.getText());
             loginField.clear();
             passwordField.clear();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void tryToReg(){
+        if(socket == null || socket.isClosed()) {
+            connect();
+        }
+        try {
+            out.writeUTF("/reg " + regLog.getText() + " " + regPass.getText() + " " + regNick.getText());
+            regLog.clear();
+            regPass.clear();
+            regNick.clear();
         } catch (IOException e) {
             e.printStackTrace();
         }
