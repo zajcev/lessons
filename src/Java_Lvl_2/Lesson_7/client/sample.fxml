@@ -19,7 +19,7 @@
         <PasswordField promptText="Пароль" fx:id="passwordField" onAction="#tryToAuth"/>
         <Button onAction="#tryToAuth" text="Войти"/>
     </HBox>
-    <Hyperlink text="Зарегистрироваться" fx:id="registration" textAlignment="CENTER"  onAction="#viewRegPane"/>
+    <Hyperlink text="Зарегистрироваться" fx:id="registration" textAlignment="CENTER"  onAction="#viewRegPane" managed="true"/>
 
     <!--нижняя панель отвечает за чат-->
     <HBox VBox.vgrow="ALWAYS">

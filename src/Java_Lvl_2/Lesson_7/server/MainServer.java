@@ -6,10 +6,7 @@ import java.net.Socket;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.Vector;
+import java.util.*;
 
 public class MainServer {
 
@@ -66,9 +63,15 @@ public class MainServer {
     }
 
     public void broadCastMsg(String sender,String msg) {
+        String message = currentTime + " " + msg;
+        try {
+            AuthService.saveChatHistory(message,sender,null);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         for (ClientHandler client: clients) {
             if (!AuthService.checkBlock(client.getNick(),sender))
-            client.sendMsg(currentTime+" "+msg);
+            client.sendMsg(message);
             }
         }
 
@@ -90,14 +93,22 @@ public boolean userOnline(String nick){
     public void sendToNick(String sender,String recipient, String msg){
     for (ClientHandler client : clients ) {
         if (client.getNick().equals(sender)) // Показать сообщение отправителю
-            if (!AuthService.checkBlock(recipient,sender))
-                client.sendMsg(currentTime+" "+msg);
-            else
-                client.sendMsg("Пользователь "+recipient+" вас заблокировал");
-        if (client.getNick().equals(recipient)) // Показать получателю
-            if (!AuthService.checkBlock(recipient,sender))
-            client.sendMsg(currentTime+" "+msg);
-    }
+            if (!AuthService.checkBlock(recipient,sender)) {
+                String message = currentTime + " " + msg;
+                client.sendMsg(message);
+                try {
+                    AuthService.saveChatHistory(message,sender,recipient);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }else {
+                client.sendMsg("Пользователь " + recipient + " вас заблокировал");
+            }
+        if (client.getNick().equals(recipient)) { // Показать получателю
+            if (!AuthService.checkBlock(recipient, sender))
+                client.sendMsg(currentTime + " " + msg);
+        }
+        }
 }
 
     public void subscribe(ClientHandler client) {
@@ -130,6 +141,18 @@ public boolean userOnline(String nick){
             }
         },120*1000);
     return toDeactivate;
+    }
+    public void viewChat(ClientHandler client){
+        try {
+            Vector<Msg> messages = AuthService.getChatHistory();
+            for (Msg msg : messages) {
+                if (!AuthService.checkBlock(client.getNick(),msg.sender)){
+                    client.sendMsg(msg.msg);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

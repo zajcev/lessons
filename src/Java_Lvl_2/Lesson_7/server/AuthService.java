@@ -1,6 +1,7 @@
 package Java_Lvl_2.Lesson_7.server;
 
 import java.sql.*;
+import java.util.Vector;
 
 public class AuthService {
     private static Connection connection;
@@ -15,6 +16,23 @@ public class AuthService {
             e.printStackTrace();
         }
     }
+    public static void saveChatHistory(String msg, String sender,String whom) throws SQLException {
+        String sql = String.format("INSERT INTO MSG (message, sender, whom)" +
+                "VALUES ('%s','%s','%s')",msg,sender,whom);
+        stmt.execute(sql);
+    }
+    public static Vector<Msg> getChatHistory() throws SQLException {
+        Vector<Msg> messages = new Vector<>();
+
+        String sql = String.format("SELECT message,sender,whom FROM MSG");
+        ResultSet rs = stmt.executeQuery(sql);
+        while (rs.next()){
+                Msg msg = new Msg(rs.getString("message"), rs.getString("sender"), rs.getString("whom"));
+                messages.add(msg);
+        }
+       return messages;
+    }
+
     public static void addUsers(String login, String pass, String nick) throws SQLException {
         String sql = String.format("INSERT INTO USERS (login, password, nickname)" +
                 "VALUES ('%s','%s','%s')", login, pass.hashCode(), nick);
@@ -24,9 +42,11 @@ public class AuthService {
         String sql = String.format("UPDATE USERS SET nickname = '%s' WHERE nickname = '%s'",newNick,oldNick);
         String nickname = String.format("UPDATE BLACKLIST SET nickname = '%s' WHERE nickname = '%s'",newNick,oldNick);
         String blacklist = String.format("UPDATE BLACKLIST SET blacklist = '%s' WHERE blacklist = '%s'",newNick,oldNick);
+        String chatHistory = String.format("UPDATE MSG SET sender = '%s' WHERE sender = '%s'",newNick,oldNick);
         stmt.execute(sql);
         stmt.execute(nickname);
         stmt.execute(blacklist);
+        stmt.execute(chatHistory);
     }
 
     public static void addBlock(String sender,String blockNick) throws SQLException {

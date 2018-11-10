@@ -146,6 +146,7 @@ public void backToAuth(){ setAthorized(false);}
                             if(str.startsWith("/")){
                                 if (str.equals("/serverClosed")) {
                                     setAthorized(false);
+                                    textArea.clear();
                                     break;
                                 }
                                 if(str.startsWith("/clientlist")) {

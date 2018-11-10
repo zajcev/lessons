@@ -48,6 +48,7 @@ public class ClientHandler {
                                             nick = newNick;
                                             server.broadCastMsg(nick, "Пользователь " + nick + " подключился");
                                             server.subscribe(ClientHandler.this);
+                                            server.viewChat(ClientHandler.this);
                                             break;
                                         } else {
                                             sendMsg("Неверный логин/пароль!");
