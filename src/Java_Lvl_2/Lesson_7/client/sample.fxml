@@ -10,6 +10,7 @@
 
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Hyperlink?>
 <VBox alignment="center" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.121" fx:controller="Java_Lvl_2.Lesson_7.client.Controller">
 
     <!--верхняя панель отвечает за авторизацию-->
@@ -18,6 +19,7 @@
         <PasswordField promptText="Пароль" fx:id="passwordField" onAction="#tryToAuth"/>
         <Button onAction="#tryToAuth" text="Войти"/>
     </HBox>
+    <Hyperlink text="Зарегистрироваться" fx:id="registration" textAlignment="CENTER"  onAction="#viewRegPane" managed="true"/>
 
     <!--нижняя панель отвечает за чат-->
     <HBox VBox.vgrow="ALWAYS">
@@ -31,4 +33,12 @@
         <ListView fx:id="clientsList" managed="false" visible="false">
         </ListView>
     </HBox>
+
+    <HBox fx:id="regPane" visible="false" managed="false">
+        <TextField  promptText="Логин" fx:id="regLog"/>
+        <PasswordField promptText="Пароль" fx:id="regPass"/>
+        <TextField  promptText="Ник" fx:id="regNick"/>
+        <Button text="Регистрация" onAction="#tryToReg"/>
+    </HBox>
+    <Hyperlink text="Назад" fx:id="back" textAlignment="CENTER" visible="false" managed="false" onAction="#backToAuth" />
 </VBox>

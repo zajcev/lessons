@@ -48,6 +48,7 @@ public class ClientHandler {
                                             nick = newNick;
                                             server.broadCastMsg(nick, "Пользователь " + nick + " подключился");
                                             server.subscribe(ClientHandler.this);
+                                            server.viewChat(ClientHandler.this);
                                             break;
                                         } else {
                                             sendMsg("Неверный логин/пароль!");
@@ -55,6 +56,19 @@ public class ClientHandler {
                                     } else {
                                         sendMsg("Пользователь с таким логином уже в сети");
                                     }
+                                }
+                                if (str.startsWith("/reg")){
+                                    String[] tokens = str.split(" "); // 1 - login, 2 - pass, 3 - nick
+                                    if (tokens.length == 4) {
+                                        if (!AuthService.nickIsBusy(tokens[3])) {
+                                            try {
+                                                AuthService.addUsers(tokens[1],tokens[2],tokens[3]);
+                                                sendMsg("Вы зарегистрированы");
+                                            } catch (SQLException e) {
+                                                e.printStackTrace();
+                                            }
+                                        } else sendMsg("Такой ник уже занят");
+                                    }else sendMsg("Не все поля были заполнены");
                                 }
                             }
                         }
@@ -86,6 +100,22 @@ public class ClientHandler {
                                             e.printStackTrace();
                                         }
                                         sendMsg("Вы добавили пользователя " + nickName + " в черный список");
+                                    }
+                                    if (str.startsWith("/changeNick")) {
+                                        String newNick = splitNick(str);
+                                        if (!newNick.equals(null)) {
+                                            if (!AuthService.nickIsBusy(newNick)) {
+                                                try {
+                                                    AuthService.renameUser(nick, newNick);
+                                                    server.unsubscribe(ClientHandler.this);
+                                                    nick = newNick;
+                                                    server.subscribe(ClientHandler.this);
+                                                    out.writeUTF("Вы изменили ник на "+newNick);
+                                                } catch (SQLException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            } else out.writeUTF("Такой никнейм уже занят");
+                                        }
                                     }
                                 } else {
                                     server.broadCastMsg(nick, nick + ": " + str);
