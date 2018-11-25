@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 public class ClientHandler {
 
@@ -18,6 +19,7 @@ public class ClientHandler {
     private DataInputStream in;
     private String nick;
 
+    Logger logger = Logger.getLogger("ServerLogs");
 
     public ClientHandler(MainServer server, Socket socket) {
 
@@ -47,6 +49,7 @@ public class ClientHandler {
                                             sendMsg("/authok");
                                             nick = newNick;
                                             server.broadCastMsg(nick, "Пользователь " + nick + " подключился");
+                                            logger.info("Пользователь " + nick + " подключился");
                                             server.subscribe(ClientHandler.this);
                                             server.viewChat(ClientHandler.this);
                                             break;
@@ -63,6 +66,7 @@ public class ClientHandler {
                                         if (!AuthService.nickIsBusy(tokens[3])) {
                                             try {
                                                 AuthService.addUsers(tokens[1],tokens[2],tokens[3]);
+                                                logger.info("Пользователь "+tokens[1]+" зарегистрировался");
                                                 sendMsg("Вы зарегистрированы");
                                             } catch (SQLException e) {
                                                 e.printStackTrace();
@@ -78,6 +82,7 @@ public class ClientHandler {
                                 if (str.startsWith("/")) {
                                     if (str.equals("/end")) {
                                         server.broadCastMsg(nick, nick + " вышел из чата");
+                                        logger.info(nick + " вышел из чата");
                                         out.writeUTF("/serverClosed");
                                         break;
                                     }
