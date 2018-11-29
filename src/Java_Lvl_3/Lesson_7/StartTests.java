@@ -19,9 +19,11 @@ public class StartTests {
 
         for ( Method method : methods) {
             if (method.isAnnotationPresent(BeforeSuite.class)){
+                if (map.containsKey(0)) throw new RuntimeException("Метод Before уникален");
                 map.put(0,method);
             }
             if (method.isAnnotationPresent(AfterSuite.class)){
+                if (map.containsKey(11)) throw new RuntimeException("Метод After уникален");
                 map.put(11,method);
             }
             if (method.isAnnotationPresent(Test.class)){
