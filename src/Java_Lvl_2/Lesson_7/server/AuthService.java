@@ -12,6 +12,7 @@ public class AuthService {
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection("jdbc:sqlite:mainDB.db");
             stmt = connection.createStatement();
+
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }

@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public class MainServer {
 
@@ -15,13 +18,24 @@ public class MainServer {
     String currentTime;
     boolean toDeactivate = false;
 
+    Logger logger = Logger.getLogger("ServerLogs");
+    FileHandler file;
 
     public MainServer() throws SQLException {
 
         ServerSocket server = null;
         Socket socket = null;
         clients = new Vector<>();
-     new Thread(new Runnable() {
+
+        try {
+            file = new FileHandler("C:/ServerLog.txt");
+            logger.addHandler(file);
+            SimpleFormatter formatter = new SimpleFormatter();
+            file.setFormatter(formatter);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        new Thread(new Runnable() {
          @Override
          public void run() {
              while (true) {
@@ -36,10 +50,12 @@ public class MainServer {
 
             server = new ServerSocket(8189);
             System.out.println("Сервер запущен!");
+            logger.info("Сервер запущен!");
 
             while (true) {
                 socket = server.accept();
                 System.out.println("Клиент подключился!");
+                logger.info("Клиент подключился!");
                 new ClientHandler(this, socket);
             }
 
